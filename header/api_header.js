@@ -16,7 +16,7 @@ function contentBody() {
 function outletsBody() {
     return {
         "MySId": "z4f!c83%634f.g#9g",
-       "Region": "BLR"
+       "Region": "ALL"
     };
 }
 
