@@ -2,48 +2,35 @@ const axios = require('axios')
 const errors = require('../error/error')
 const { headerBody, outletsBody } = require('../header/api_header')
 const db = require('../config/db');
+const logError = require('../error/log');
 
 exports.syncMenuOfOutlet = async (req, res) => {
     const reqBody = req.body
     if (reqBody?.Region && reqBody?.ShopCode) {
-
-
-        const requestBody = {
-            "RequestType": "ListOfMenuItems",
-            "MySId": "z4f!c83%634f.g#9g",
-            "Region": req?.body?.Region,
-            "Maincat": "AAB SWEETS",
-            "Subcat": "ALL",
-            "ShopCode": req?.body?.ShopCode,
-            "ExtPlatForm": "ONDC"
-        }
-
         try {
-            const response = await axios.post(
-                'https://staging.aabsweets.com:9001/api/Listofitemsforonlineorders',
-                requestBody, 
-                {
-                    headers: headerBody()
-                }
-            );
-
-         const updateresponce =   await updateData(response.data)
-
-            res.status(200).json(updateresponce);
+            const apiURL = process.env.ERP_URL+ apiERPEndPoint().getMenuOfOutlet;
+            const Body = contentBody('getMenuBody')
+            const header =headerBody()
+            headerBodyContent.Region =reqBody?.Region
+            headerBodyContent.ShopCode =reqBody?.ShopCode
+            const response = await axios.post( apiURL,  Body, {  headers: header  } );
+             const updateresponce =   await updateData(response.data)
+            res.status(200).json({data:updateresponce,statusText:response.statusText});
         }
 
 
         catch (error) {
             res.status(500).json({ error: error.message });
-
-            // Handle errors
+            logError(error)
             console.error('Error calling the external API:', error.message);
             res.status(500).json({ error: 'Failed to call the external API' });
+            
 
         }
     } else {
-
-        res.status(404).json({ error: 'Please give resion and shopcpoded' })
+  
+        res.status(404).json({ error: 'ShopCode and Region  is required in header' })
+        throw new Error('Please give resion and shopcpoded');
     }
 };
 

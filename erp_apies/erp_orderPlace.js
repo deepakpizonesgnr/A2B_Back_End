@@ -6,7 +6,7 @@ async function orderPlace (){
     try {
         const response = await axios.post(
             'https://staging.aabsweets.com:9001/api/itemavailabilitycheckV2',
-            contentBody(), // Assuming this generates the request body
+            contentBody('res'), // Assuming this generates the request body
             {
                 headers: {
                     'Content-Type': 'application/json',
