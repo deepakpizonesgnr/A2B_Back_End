@@ -9,17 +9,15 @@ exports.outlets = async (req, res) => {
     try {
         const response = await axios.post(
             'https://staging.aabsweets.com:9001/api/listofonlineorderoutlets',
-            outletsBody(), // Assuming this generates the request body
+            outletsBody(),
             {
                 headers: headerBody()
             }
         );
-        const data = response.data;
+        const data = response?.data;
        const dropTableQuery = 'DROP TABLE IF EXISTS outlets;'
-    //    const dropmenuTableQuery = 'DROP TABLE IF EXISTS allmenuoutlets;'
        await db.promise().query(dropTableQuery)
-    //    await db.promise().query(dropmenuTableQuery)
-     if (response.data) {
+     if (response?.data) {
         const createTableQuery = `
         CREATE TABLE IF NOT EXISTS outlets (
             CountryCode VARCHAR(50),
@@ -66,16 +64,16 @@ for (const item of data) {
         item.Costcenter
     ]);
 }
-
-     }  
-     res.json(response.data);
+res.status(200).json(response);
+     } else{
+        res.status(500).json({error:'data not found'});
+     } 
+     
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
-    
-            // Handle errors
+
             console.error('Error calling the external API:', error.message);
-            res.status(500).json({ error: 'Failed to call the external API' });
+            res.status(500).json({ error: 'Failed to call the external API', errorex :error.message });
 
     }
  
