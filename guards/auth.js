@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 
- authMiddleware = ((req, res, next) => {
+ const  authMiddleware = ((req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1]; // Bearer <token>
 
     if (!token) {

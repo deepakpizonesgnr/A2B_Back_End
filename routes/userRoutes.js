@@ -1,16 +1,17 @@
 const express = require('express');
 const logError = require('../error/log');
-const { registerUser, loginUser } = require('../controllers/userController');
-const { validateUser } = require('../middleware/validate');
-const { outlets } = require('../erp_apies/outletsController');
-const { menuOfOutlet} = require('../erp_apies/menuOfOutletController');
-const  {syncMenuOfOutlet}  = require('../erp_apies/syncController');
-const authMiddleware = require('../middleware/auth');
+const errors = require('../error/error')
+const { registerUser, loginUser } = require('../user_modules/userController');
+const { validateUser } = require('../helpers/validate');
+const { outlets } = require('../user_modules/erp_modules/outletsController');
+const { menuOfOutlet} = require('../user_modules/erp_modules/menuOfOutletController');
+const  {syncMenuOfOutlet}  = require('../user_modules/erp_modules/syncController');
+const authMiddleware = require('../guards/auth');
 const router = express.Router();
 
 router.post('/register', validateUser, registerUser);
 router.post('/login', validateUser, loginUser);
-router.get('/getListOfOutlets',outlets );
+router.get('/getListOfOutlets',authMiddleware,outlets );
 router.post('/getMenuForParticularOutlets',menuOfOutlet );
 router.post('/syncMenuForParticularOutlets',syncMenuOfOutlet );
 router.post('/logs', (req, res) => {
@@ -20,13 +21,13 @@ router.post('/logs', (req, res) => {
   });
 ////////////////////////if user try with  wrong method
 router.all('/syncMenuForParticularOutlets', (req, res) => {
-    res.status(404).json({ error: 'Method Not Found' });
+    res.status(404).json({ error: errors[404] });
 });
 router.all('/getMenuForParticularOutlets', (req, res) => {
-    res.status(404).json({ error: 'Method Not Found' });
+    res.status(404).json({ error: errors[404] });
 });
-router.all('/getListOfOutlets', (req, res) => {
-    res.status(404).json({ error: 'Method Not Found' });
+router.all('/getListOfOutlets',authMiddleware, (req, res) => {
+    res.status(404).json({ error: errors[404] });
 });
 
 module.exports = router;

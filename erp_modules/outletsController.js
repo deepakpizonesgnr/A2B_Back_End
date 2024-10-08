@@ -1,7 +1,7 @@
 const axios = require('axios')
-const errors = require('../error/error')
-const { headerBody,apiERPEndPoint,contentBody} = require('../header/api_header')
-const db = require('../config/db');
+const errors = require('../../error/error')
+const { headerBody,apiERPEndPoint,contentBody} = require('../../helpers/api_header')
+const db = require('../../config/db');
 
 exports.outlets = async (req, res) => {
 const apiURL = process.env.ERP_URL+ apiERPEndPoint().getOutlets;
@@ -63,10 +63,9 @@ for (const item of data) {
        res.status(200).json({data:response.data,statusText:response.statusText});
      } 
       
-     
     } catch (error) {
 
-            res.status(500).json({ error: 'Failed to call the external API', errorex :error.message });
+            res.status(500).json({ error: errors[500] });
 
     }
  

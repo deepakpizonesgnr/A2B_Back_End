@@ -2,8 +2,8 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const { headerBody,contentBody } = require('../header/api_header');
-const { orderPlace } = require('../erp_apies/erp_orderPlace');
+const { headerBody,contentBody } = require('../helpers/api_header');
+const { orderPlace } = require('../erp_modules/erp_orderPlace');
 
 exports.registerUser = async (req, res) => {
     const { username, password } = req.body;
