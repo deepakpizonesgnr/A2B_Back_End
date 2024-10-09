@@ -6,6 +6,7 @@ const { validateUser } = require('../helpers/validate');
 const { outlets } = require('../erp_modules/outletsController');
 const { menuOfOutlet} = require('../erp_modules/menuOfOutletController');
 const  {syncMenuOfOutlet}  = require('../erp_modules/syncController');
+const {forgetPassword,resetPassword} = require('../user_modules/resetpassword')
 const authMiddleware = require('../guards/auth');
 const router = express.Router();
 
@@ -14,6 +15,8 @@ router.post('/login', validateUser, loginUser);
 router.get('/getListOfOutlets',outlets );
 router.post('/getMenuForParticularOutlets',menuOfOutlet );
 router.post('/syncMenuForParticularOutlets',syncMenuOfOutlet );
+router.post('/forgetPassword',forgetPassword)
+router.post('/reset-password/:token',resetPassword)
 router.post('/logs', (req, res) => {
     const logEntry = req.body;
     logError(logEntry);

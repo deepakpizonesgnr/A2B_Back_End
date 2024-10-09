@@ -3,7 +3,7 @@ const db = require('../config/db');
 class User {
     static addUser(username, password) {
         return new Promise((resolve, reject) => {
-            db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password], (error, results) => {
+            db.query('INSERT INTO users (email, password) VALUES (?, ?)', [username, password], (error, results) => {
                 if (error) return reject(error);
                 resolve(results);
             });
