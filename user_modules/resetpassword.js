@@ -36,7 +36,7 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
         // Send email
         const resetUrl = `http://localhost:3000/api/reset-password/${token}`;
         const mailOptions = {
-            to: 'shakti.singh@pizoneinfotech.com',
+            to: email,
             subject: 'Password Reset',
             text: `You requested a password reset. Click the link to reset your password: ${resetUrl}`
         };

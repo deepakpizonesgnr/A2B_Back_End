@@ -6,7 +6,8 @@ const { headerBody,contentBody } = require('../helpers/api_header');
 const { orderPlace } = require('../erp_modules/erp_orderPlace');
 
 exports.registerUser = async (req, res) => {
-    const { username, password } = req.body;
+    const {  password } = req.body;
+    const username = req.body.email
     const hashedPassword = await bcrypt.hash(password, 10);
     
     try {
@@ -21,7 +22,8 @@ exports.loginUser = async (req, res) => {
 
     try {
    
-    const { username, password } = req.body;
+    const {password } = req.body;
+    const username = req.body.email
 
         const user = await User.findUser(username);
         if (!user || !(await bcrypt.compare(password, user.password))) {
