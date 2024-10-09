@@ -2,9 +2,9 @@ const axios = require('axios')
 const errors = require('../../error/error')
 const { headerBody,apiERPEndPoint,contentBody} = require('../../helpers/api_header')
 const db = require('../../config/db');
-const updateData = require('../services/menu.service')
+const transformData = require('../services/menu.service')
 
-exports.menuOfOutlet = async (req, res) => {
+exports.syncOfOutlet = async (req, res) => {
     const reqBody = req.body
     if(reqBody?.Region && reqBody?.ShopCode){
     try {
@@ -15,10 +15,11 @@ exports.menuOfOutlet = async (req, res) => {
         Body.ShopCode =reqBody?.ShopCode
         const response = await axios.post( apiURL,  Body, {  headers: header  } );
     if(response?.data){
-        await updateData.updateData(response.data)
+        const updateresponce =  await transformData.transformData(response.data)
+        res.status(200).json({data:updateresponce,statusText:response.statusText});
     }
        
-        res.json(response.data);
+       
      }  
     
     catch (error) {
