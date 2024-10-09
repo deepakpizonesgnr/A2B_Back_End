@@ -1,7 +1,7 @@
 const axios = require('axios')
-const errors = require('../../error/error')
-const { headerBody, outletsBody } = require('../../helpers/api_header')
-const db = require('../../config/db');
+const errors = require('../error/error')
+const { headerBody,contentBody,apiERPEndPoint } = require('../helpers/api_header')
+const db = require('../config/db');
 
 exports.syncMenuOfOutlet = async (req, res) => {
     const reqBody = req.body
@@ -10,8 +10,8 @@ exports.syncMenuOfOutlet = async (req, res) => {
             const apiURL = process.env.ERP_URL+ apiERPEndPoint().getMenuOfOutlet;
             const Body = contentBody('getMenuBody')
             const header =headerBody()
-            headerBodyContent.Region =reqBody?.Region
-            headerBodyContent.ShopCode =reqBody?.ShopCode
+            Body.Region =reqBody?.Region
+            Body.ShopCode =reqBody?.ShopCode
             const response = await axios.post( apiURL,  Body, {  headers: header  } );
              const updateresponce =   await updateData(response.data)
             res.status(200).json({data:updateresponce,statusText:response.statusText});

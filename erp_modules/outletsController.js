@@ -1,7 +1,7 @@
 const axios = require('axios')
-const errors = require('../../error/error')
-const { headerBody,apiERPEndPoint,contentBody} = require('../../helpers/api_header')
-const db = require('../../config/db');
+const errors = require('../error/error')
+const { headerBody,apiERPEndPoint,contentBody} = require('../helpers/api_header')
+const db = require('../config/db');
 
 exports.outlets = async (req, res) => {
 const apiURL = process.env.ERP_URL+ apiERPEndPoint().getOutlets;

@@ -3,15 +3,15 @@ const logError = require('../error/log');
 const errors = require('../error/error')
 const { registerUser, loginUser } = require('../user_modules/userController');
 const { validateUser } = require('../helpers/validate');
-const { outlets } = require('../user_modules/erp_modules/outletsController');
-const { menuOfOutlet} = require('../user_modules/erp_modules/menuOfOutletController');
-const  {syncMenuOfOutlet}  = require('../user_modules/erp_modules/syncController');
+const { outlets } = require('../erp_modules/outletsController');
+const { menuOfOutlet} = require('../erp_modules/menuOfOutletController');
+const  {syncMenuOfOutlet}  = require('../erp_modules/syncController');
 const authMiddleware = require('../guards/auth');
 const router = express.Router();
 
 router.post('/register', validateUser, registerUser);
 router.post('/login', validateUser, loginUser);
-router.get('/getListOfOutlets',authMiddleware,outlets );
+router.get('/getListOfOutlets',outlets );
 router.post('/getMenuForParticularOutlets',menuOfOutlet );
 router.post('/syncMenuForParticularOutlets',syncMenuOfOutlet );
 router.post('/logs', (req, res) => {
