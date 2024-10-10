@@ -16,7 +16,14 @@ exports.syncOfOutlet = async (req, res) => {
         const response = await axios.post( apiURL,  Body, {  headers: header  } );
     if(response?.data){
         const updateresponce =  await transformData.transformData(response.data)
-        res.status(200).json({data:updateresponce,statusText:response.statusText});
+        const swiggyHeader = {
+            'Authorization Key':'',
+            'token-id':'',
+            'Content-Type': 'application/json',
+        }
+        const swiggy = await axios.post('https://rms.swiggy.com/v1/restaurant/{id}/full-menu',updateresponce,{headers: swiggyHeader})
+        
+        res.status(200).json({statusText: swiggy});
     }
        
        
