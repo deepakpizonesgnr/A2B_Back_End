@@ -8,4 +8,31 @@ module.exports = {
     CHANGE_PASSWORD: "Password Change Successfully",
     EMAIL_VERIFICATION: "Email Verification Successfully",
   },
+
+
+  // Constants for Aggregator Status
+AGGREGATOR_STATUS : {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+},
+
+// Common Error Messages
+ERROR_MESSAGES : {
+  INVALID_OTP:'Invalid or expired otp',
+  NOT_FOUND: 'Resource not found',
+  VALIDATION_ERROR: 'Validation error occurred',
+  INTERNAL_SERVER_ERROR: 'Internal server error',
+},
+
+// Response Messages
+SUCCESS_MESSAGES : {
+  VERIFIEDOTP: 'Verification success',
+  PASSWORD_UPDATED:'Password updated successfully!',
+  OTP_CREATED:'The OTP has been sent to your email.',
+  AGGREGATOR_CREATED: 'Aggregator created successfully!',
+  AGGREGATOR_UPDATED: 'Aggregator updated successfully!',
+  AGGREGATOR_DELETED: 'Aggregator deleted successfully!',
+},
+
+
 };

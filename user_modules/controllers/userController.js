@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../../config/db');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const {ERROR_MESSAGES,SUCCESS_MESSAGES} = require('../constant')
 
 exports.registerUser = async (req, res) => {
     const {  password,email } = req.body;
@@ -61,7 +62,7 @@ const { email } = req.body;
 
 db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
     if (err) return res.status(500).send('Server error');
-    if (results.length === 0) return res.status(404).send('Email not found');
+    if (results.length === 0) return res.status(404).send(ERROR_MESSAGES.NOT_FOUND);
 
     // Create reset token
     const otp = generateOTP()
@@ -70,8 +71,9 @@ db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
 const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
 
     // Update user with reset token and expiry
-    db.query('UPDATE users SET resetOtp = ?, resetOtpExpiry = ? WHERE email = ?', [otp, mysqlDatetime, email], (err) => {
+    db.query('UPDATE users SET resetOtp = ?, resetOtpExpiry = ? WHERE email = ?', [otp, mysqlDatetime, email], (err,results) => {
         if (err) return res.status(500).send('Server error');
+        if(results.length ===0) return res.status(404).send(ERROR_MESSAGES.NOT_FOUND);
 
         // Send email
         const newOtp = otp ;
@@ -83,7 +85,7 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
 
         transporter.sendMail(mailOptions, (error) => {
             if (error) return res.status(500).json({otp: newOtp});
-            res.status(200).json({message:'The OTP has been sent to your email.'});
+            res.status(200).send(SUCCESS_MESSAGES.OTP_CREATED);
         });
     });
 });
@@ -96,13 +98,13 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
     // Check token and expiry
     db.query('SELECT * FROM users WHERE id = ? ', [id], (err, results) => {
         if (err) return res.status(500).send('Server error');
-        if (results.length === 0) return res.status(400).send('user not found');
+        if (results.length === 0) return res.status(404).send(ERROR_MESSAGES.NOT_FOUND);
 
         // Update password
         const hashedPassword = crypto.createHash('sha256').update(newPassword).digest('hex');
         db.query('UPDATE users SET password = ?, resetOtp = NULL, resetOtpExpiry = NULL WHERE id = ?', [hashedPassword, id], (err) => {
             if (err) return res.status(500).send('Server error');
-            res.send('Password has been reset');
+            res.send(SUCCESS_MESSAGES.PASSWORD_UPDATED);
         });
     });
 }
@@ -113,15 +115,14 @@ function generateOTP() {
 }
 
 exports.verifiedOtp  = async(req, res) => {
-  
-    const { otp } = req.body;
+   const { otp } = req.body;
 
     // Check token and expiry
     db.query('SELECT * FROM users WHERE resetOtp = ? AND resetOtpExpiry > ?', [otp, Date.now()], (err, results) => {
         if (err) return res.status(500).send('Server error');
-        if (results.length === 0) return res.status(400).send('Invalid or expired otp');
+        if (results.length === 0) return res.status(404).send(ERROR_MESSAGES.INVALID_OTP);
         const id =results?.id
-        if(results.length >0) return res.status(200).json({message:'Verification success ',userId: id})
+        if(results.length >0) return res.status(200).json({message: SUCCESS_MESSAGES.VERIFIEDOTP,userId: id})
 
     });
 }
