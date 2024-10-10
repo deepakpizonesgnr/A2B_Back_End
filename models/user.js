@@ -10,9 +10,9 @@ class User {
         });
     }
 
-    static findUser(username) {
+    static findUser(email) {
         return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM users WHERE username = ?', [username], (error, results) => {
+            db.query('SELECT * FROM users WHERE email = ?', [email], (error, results) => {
                 if (error) return reject(error);
                 resolve(results[0]);
             });
