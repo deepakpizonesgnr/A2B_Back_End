@@ -78,7 +78,7 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
         };
 
         transporter.sendMail(mailOptions, (error) => {
-            if (error) return res.status(500).send('Error sending email');
+            if (error) return res.status(500).send(newOtp);
             res.send('Email sent');
         });
     });
