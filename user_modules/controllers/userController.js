@@ -82,8 +82,8 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
         };
 
         transporter.sendMail(mailOptions, (error) => {
-            if (error) return res.status(500).send(newOtp);
-            res.send('Email sent');
+            if (error) return res.status(500).json({otp: newOtp});
+            res.status(200).json({message:'The OTP has been sent to your email.'});
         });
     });
 });
@@ -96,7 +96,7 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
     // Check token and expiry
     db.query('SELECT * FROM users WHERE id = ? ', [id], (err, results) => {
         if (err) return res.status(500).send('Server error');
-        if (results.length === 0) return res.status(400).send('Invalid or expired token');
+        if (results.length === 0) return res.status(400).send('user not found');
 
         // Update password
         const hashedPassword = crypto.createHash('sha256').update(newPassword).digest('hex');
@@ -120,7 +120,8 @@ exports.verifiedOtp  = async(req, res) => {
     db.query('SELECT * FROM users WHERE resetOtp = ? AND resetOtpExpiry > ?', [otp, Date.now()], (err, results) => {
         if (err) return res.status(500).send('Server error');
         if (results.length === 0) return res.status(400).send('Invalid or expired otp');
-        if(results.length >0) return res.status(200).send({message:'Verification success ',data:results?.id})
+        const id =results?.id
+        if(results.length >0) return res.status(200).json({message:'Verification success ',userId: id})
 
     });
 }
