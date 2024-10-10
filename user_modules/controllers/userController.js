@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const {validateUser} = require('../helpers/validate')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../config/db');
@@ -21,7 +22,10 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
 
     try {
-   
+     const { error } = validateUser(req.body)
+     if(error){
+        return res.status(400).json({ errors: error.details.map(err => err.message) });
+     }
     const {password,email } = req.body;
     
 
@@ -72,7 +76,7 @@ const mysqlDatetime = expiryDate.toISOString().slice(0, 19).replace('T', ' ');
         // Send email
         const newOtp = otp ;
         const mailOptions = {
-            to: 'shakti.singh@pizoneinfotech.com',
+            to: email,
             subject: 'Password Reset',
             text: `You requested a password reset. Click the link to reset your password: ${newOtp}`
         };
