@@ -1,12 +1,12 @@
-const { body, validationResult } = require('express-validator');
+const Joi = require('joi');
 
-exports.forgetPassword = [
-    body('email').isString().notEmpty().withMessage('ShopCode is required'),
-    (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-        next();
-    }
-  ];
+// Aggregator validation schema
+const userSchema = Joi.object({
+    email: Joi.string().max(255).required(),
+  password:Joi.string().max(255).required(),
+
+});
+
+exports.validateUser = (user) => {
+    return userSchema.validate(user);
+};
