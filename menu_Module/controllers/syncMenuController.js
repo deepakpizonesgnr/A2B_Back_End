@@ -6,9 +6,11 @@ const transformData = require('../services/menu.service')
 
 exports.syncOfOutlet = async (req, res) => {
     const reqBody = req.body
-    if(reqBody?.Region && reqBody?.ShopCode){
+    if(reqBody?.Region && reqBody?.ShopCode && reqBody?.restaurantId){
     try {
+        const swiggyURL = process.env.SWIGGY_URL
         const apiURL = process.env.ERP_URL+ apiERPEndPoint().getMenuOfOutlet;
+        const rId = reqBody?.restaurantId
         const Body = contentBody('getMenuBody')
         const header =headerBody()
         Body.Region =reqBody?.Region
@@ -21,9 +23,12 @@ exports.syncOfOutlet = async (req, res) => {
             'token-id':'',
             'Content-Type': 'application/json',
         }
-        const swiggy = await axios.post('https://rms.swiggy.com/v1/restaurant/{id}/full-menu',updateresponce,{headers: swiggyHeader})
-        
-        res.status(200).json({statusText: swiggy});
+        const swiggy = await axios.post(swiggyURL+`${rId}`+'/full-menu',updateresponce,{headers: swiggyHeader})
+        if(!swiggy?.statusCode !=200){ res.status(200).json({statusText: swiggy.data});}
+        else{
+            res.send(swiggy);
+        }
+       
     }
        
        
