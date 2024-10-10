@@ -10,6 +10,7 @@ const authMiddleware = require('../guards/auth');
 const router = express.Router();
 const outletRoutes = require('../Outlets_Module/routes')
 const userRoutes = require('../user_modules/routes')
+const aggregatorRoutes = require('../aggregator_module/routes')
 
 // router.post('/login', validateUser, loginUser);
 // router.post('/user',forgetPassword)
@@ -26,6 +27,8 @@ module.exports = (app) => {
     app.use("/api", router);
     outletRoutes(app, router);
     menuRoutes(app, router);
-    userRoutes(app,router)
+    userRoutes(app,router);
+    aggregatorRoutes(app,router);
+
 
   };

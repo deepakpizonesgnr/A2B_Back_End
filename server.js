@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const route = require('./routes/userRoutes');
+const route = require('./routes/routes');
 require('dotenv').config();
 const db = require('./config/db');// Importing to ensure DB is initialized
 
